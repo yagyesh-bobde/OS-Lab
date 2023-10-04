@@ -1,4 +1,3 @@
-// process scheduling with arrival time 
 #include <stdio.h>
 
 struct Process {
@@ -32,6 +31,32 @@ void calculateTurnaroundTime(struct Process processes[], int n) {
     }
 }
 
+void bubbleSort(struct Process processes[], int n) {
+    struct Process temp;
+    int swapped;
+
+    for (int i = 0; i < n - 1; i++) {
+        swapped = 0; // Flag to check if any swapping is done in this pass
+
+        // Last i elements are already in place, so no need to compare them again
+        for (int j = 0; j < n - i - 1; j++) {
+            // If the current element is greater than the next element, swap them
+            if (processes[j].arrival_time > processes[j + 1].arrival_time) {
+                // Swap arr[j] and arr[j + 1]
+                temp = processes[j];
+                processes[j] = processes[j + 1];
+                processes[j + 1] = temp;
+                swapped = 1; // Set the flag to true, indicating a swap occurred
+            }
+        }
+
+        // If no two elements were swapped in this pass, the array is already sorted
+        if (swapped == 0) {
+            break;
+        }
+    }
+}
+
 void calculateAverageTime(struct Process processes[], int n) {
     calculateWaitingTime(processes, n);
     calculateTurnaroundTime(processes, n);
@@ -48,7 +73,7 @@ void calculateAverageTime(struct Process processes[], int n) {
     float average_turnaround_time = (float)total_turnaround_time / n;
 
     printf("Process\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\n");
-
+    bubbleSort(processes, n);
     for (int i = 0; i < n; i++) {
         printf("%d\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].id, processes[i].arrival_time,
                processes[i].burst_time, processes[i].waiting_time, processes[i].turnaround_time);
